@@ -42,11 +42,23 @@ app.post('/shopping-list', jsonParser, (req, res) => {
       return res.status(400).send(message);
     }
   }
-
   const item = ShoppingList.create(req.body.name, req.body.budget);
   res.status(201).json(item);
 });
 
+app.post('/recipes', jsonParser, (req,res) => {
+  const recipeContents = ['name', 'ingredients'];
+  for (let i=0; i<recipeContents.length; i++){
+    const content = recipeContents[i];
+    if (!(content in req.body)) {
+      const oops = `Missing \`${content}\` in request body`
+      console.error(oops);
+      return res.status(400).send(oops);
+    }
+  }
+  const recipeItem = Recipes.create(req.body.name, req.body.ingredients);
+  res.status(201).json(recipeItem);
+})
 
 app.get('/recipes', (req, res) => {
   res.json(Recipes.get());
